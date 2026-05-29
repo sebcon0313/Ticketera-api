@@ -4,7 +4,6 @@ namespace App\Domain\Event\Repositories\Contracts;
 
 use App\Domain\Event\Models\Event;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 
 interface EventRepositoryInterface
 {

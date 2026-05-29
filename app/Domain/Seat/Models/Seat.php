@@ -12,15 +12,7 @@ class Seat extends Model
         'section_id',
         'row_label',
         'seat_number',
-        'base_price',
-        'status',
     ];
-    protected function casts(): array
-    {
-        return [
-            'base_price' => 'decimal:2',
-        ];
-    }
 
     public function section(): BelongsTo
     {

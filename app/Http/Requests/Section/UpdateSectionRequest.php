@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Event;
+namespace App\Http\Requests\Section;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreEventRequest extends FormRequest
+class UpdateSectionRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -15,13 +15,14 @@ class StoreEventRequest extends FormRequest
 
     public function rules(): array
     {
+        $sectionRoute = $this->route('section');
+        $sectionId = is_object($sectionRoute) ? $sectionRoute->id : $sectionRoute;
+
         return [
-            'venue_id' => 'required|exists:venues,id',
-            'title' => 'required|string|max:150',
-            'description' => 'nullable|string',
-            'starts_at' => 'required|date',
-            'ends_at' => 'nullable|date|after_or_equal:starts_at',
-            'image_url' => 'nullable|url|max:255',
+            'venue_id' => 'sometimes|exists:venues,id',
+            'name' => 'sometimes|string|max:150',
+            'code' => 'sometimes|string|max:50|unique:sections,code,' . $sectionId,
+            'map_config' => 'nullable|array',
         ];
     }
 

@@ -41,9 +41,9 @@ class Event extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    /* public function bookings(): HasMany
+    public function eventSeats(): HasMany
     {
-        return $this->hasMany(Booking::class);
-    } */
+        return $this->hasMany('App\\Domain\\Event_Seat\\Models\\EventSeat');
+    }
 
 }

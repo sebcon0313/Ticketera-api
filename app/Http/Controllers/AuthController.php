@@ -70,7 +70,7 @@ class AuthController extends BaseController
             return response()->json([
                 'success' => true,
                 'token' => $result['token'],
-                'user' => $result['user'],
+                /* 'user' => $result['user'], */
             ], 200);
 
         } catch (\Throwable $e) {

@@ -11,6 +11,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RolesTableSeeder::class,
             VenueTableSeeder::class,
+            SectionTableSeeder::class,
+            \Database\Seeders\SeatTableSeeder::class,
         ]);
     }
 }

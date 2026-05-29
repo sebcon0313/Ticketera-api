@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('sections', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('venue_id')->constrained()->cascadeOnDelete();
+            $table->string('name', 150);
+            $table->string('code', 50)->unique();
+            $table->json('map_config')->nullable();
             $table->timestamps();
         });
     }

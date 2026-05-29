@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Routing\Controller as BaseController;
 use App\Http\Requests\Event\StoreEventRequest;
+use App\Http\Requests\Event\UpdateEventRequest;
 use App\Http\Resources\EventResource;
 use App\Domain\Event\Services\EventService;
 use Illuminate\Http\JsonResponse;
@@ -55,6 +56,27 @@ class EventController extends BaseController
         }
     }
 
+    public function seatMap(int $id)
+    {
+        try
+        {
+            return response()->json([
+                'success' => true,
+                'data' => $this->service->seatMap($id),
+            ]);
+        }
+        catch (\Exception $e)
+        {
+            Log::error('Event seat map error: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error',
+                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+            ], 500);
+        }
+    }
+
     public function store(StoreEventRequest $request)
     {
         try
@@ -76,5 +98,52 @@ class EventController extends BaseController
                 'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
             ], 500);
         }   
+    }
+
+    public function update(UpdateEventRequest $request, int $id)
+    {
+        try
+        {
+            $event = $this->service->get($id);
+
+            return new EventResource(
+                $this->service->update($event, $request->validated())
+            );
+        }
+        catch (\Exception $e)
+        {
+            Log::error('Event update error: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error',
+                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+            ], 500);
+        }
+    }
+
+    public function destroy(int $id): JsonResponse
+    {
+        try
+        {
+            $event = $this->service->get($id);
+
+            $this->service->delete($event);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Event deleted successfully',
+            ]);
+        }
+        catch (\Exception $e)
+        {
+            Log::error('Event delete error: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error',
+                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+            ], 500);
+        }
     }
 }

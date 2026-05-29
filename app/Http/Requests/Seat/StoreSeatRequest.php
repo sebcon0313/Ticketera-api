@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Event;
+namespace App\Http\Requests\Seat;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreEventRequest extends FormRequest
+class StoreSeatRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -16,12 +16,9 @@ class StoreEventRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'venue_id' => 'required|exists:venues,id',
-            'title' => 'required|string|max:150',
-            'description' => 'nullable|string',
-            'starts_at' => 'required|date',
-            'ends_at' => 'nullable|date|after_or_equal:starts_at',
-            'image_url' => 'nullable|url|max:255',
+            'section_id' => ['required', 'integer', 'exists:sections,id'],
+            'row_label' => ['required', 'string', 'max:50'],
+            'seat_number' => ['required', 'string', 'max:50'],
         ];
     }
 

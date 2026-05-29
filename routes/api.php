@@ -3,8 +3,9 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Api\EventController;
+use App\Http\Controllers\Api\SectionController;
+use App\Http\Controllers\Api\SeatController;
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\SeatController;
 use App\Http\Controllers\TicketController;
 use App\Http\Middleware\IsUserAuth;
 use App\Http\Middleware\IsAdmin;    
@@ -29,6 +30,8 @@ Route::prefix('auth')->group(function () {
 
 Route::apiResource('events', EventController::class)
     ->only(['index', 'show']);
+
+Route::get('events/{id}/seat-map', [EventController::class, 'seatMap']);
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +60,13 @@ Route::middleware([IsUserAuth::class])->group(function () {
 
         Route::apiResource('events', EventController::class)
             ->except(['index', 'show']); // ya están públicas
+
+        Route::get('sections/venue/{venueId}', [SectionController::class, 'listByVenue']);
+        Route::apiResource('sections', SectionController::class);
+
+        Route::get('seats/sections/{sectionId}', [SeatController::class, 'listBySection']);
+        Route::post('seats/generate', [SeatController::class, 'bulkGenerate']);
+        Route::apiResource('seats', SeatController::class);
     });
 });
 

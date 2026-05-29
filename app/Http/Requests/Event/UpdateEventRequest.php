@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Event;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateEventRequest extends FormRequest
 {
@@ -15,5 +17,14 @@ class UpdateEventRequest extends FormRequest
             'starts_at' => 'sometimes|date',
             'ends_at' => 'nullable|date',
         ];
+    }
+
+    protected function failedValidation(Validator $validator): void
+    {
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'message' => 'Validation error',
+            'errors' => $validator->errors(),
+        ], 422));
     }
 }
