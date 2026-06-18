@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Api\EventController;
+use App\Http\Controllers\Api\EventSectionsController;
 use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\Api\SeatController;
 use App\Http\Controllers\PaymentController;
@@ -64,6 +65,8 @@ Route::middleware([IsUserAuth::class])->group(function () {
 
         Route::get('sections/venue/{venueId}', [SectionController::class, 'listByVenue']);
         Route::apiResource('sections', SectionController::class);
+
+        Route::post('event-sections-price', [EventSectionsController::class, 'store']);
 
         Route::get('seats/sections/{sectionId}', [SeatController::class, 'listBySection']);
         Route::post('seats/generate', [SeatController::class, 'bulkGenerate']);
