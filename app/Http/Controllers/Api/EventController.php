@@ -77,6 +77,39 @@ class EventController extends BaseController
         }
     }
 
+    public function localities(int $id)
+    {
+        try
+        {
+            $sections = $this->service->seatMap($id);
+
+            $localities = array_map(static function (array $section): array {
+                return [
+                    'section' => $section['section'],
+                    'total_seats' => count($section['seats']),
+                ];
+            }, $sections);
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'event_id' => $id,
+                    'localities' => $localities,
+                ],
+            ]);
+        }
+        catch (\Exception $e)
+        {
+            Log::error('Event localities error: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error',
+                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+            ], 500);
+        }
+    }
+
     public function store(StoreEventRequest $request)
     {
         try

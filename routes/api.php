@@ -32,6 +32,7 @@ Route::apiResource('events', EventController::class)
     ->only(['index', 'show']);
 
 Route::get('events/{id}/seat-map', [EventController::class, 'seatMap']);
+Route::get('events/{id}/localidades', [EventController::class, 'localities']);
 
 /*
 |--------------------------------------------------------------------------

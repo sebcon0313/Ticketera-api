@@ -5,6 +5,7 @@ namespace App\Domain\Event_Seat\Services;
 use App\Domain\Event\Models\Event;
 use App\Domain\Event_Seat\Repositories\EventSeatRepository;
 use App\Domain\Seat\Repositories\SeatRepository;
+use Illuminate\Support\Collection;
 
 class EventSeatService
 {
@@ -58,6 +59,26 @@ class EventSeatService
                             'status' => $eventSeat->status,
                         ];
                     })->values()->all(),
+                ];
+            })
+            ->all();
+    }
+
+    public function localitiesByEvent(int $eventId): array
+    {
+        $eventSeats = $this->repository->findByEventIdWithSeat($eventId);
+
+        return $eventSeats
+            ->groupBy(fn ($eventSeat) => $eventSeat->seat->section_id)
+            ->values()
+            ->map(function (Collection $group): array {
+                $firstSeat = $group->first()->seat;
+
+                return [
+                    'section_id' => $firstSeat->section?->id,
+                    'section' => $firstSeat->section?->name,
+                    'code' => $firstSeat->section?->code,
+                    'total_seats' => $group->count(),
                 ];
             })
             ->all();
