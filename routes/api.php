@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\EventSectionsController;
 use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\Api\SeatController;
+use App\Http\Controllers\Api\VenueController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TicketController;
 use App\Http\Middleware\IsUserAuth;
@@ -68,38 +69,10 @@ Route::middleware([IsUserAuth::class])->group(function () {
 
         Route::post('event-sections-price', [EventSectionsController::class, 'store']);
 
+        Route::apiResource('venues', VenueController::class);
+
         Route::get('seats/sections/{sectionId}', [SeatController::class, 'listBySection']);
         Route::post('seats/generate', [SeatController::class, 'bulkGenerate']);
         Route::apiResource('seats', SeatController::class);
     });
 });
-
-/* 
-// RUTAS PUBLICAS
-Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
-
-// Events
-Route::controller(EventController::class)->group(function(){
-    Route::get('index', 'index');
-});
-
-// RUTAS PRIVADAS
-Route::middleware([IsUserAuth::class])->group(function () {
-    Route::controller(AuthController::class)->group(function(){
-        Route::post('logout', 'logout');
-        Route::get('me', 'getUser');
-    });
-
-    // RUTAS DE ADMINISTRADOR
-    Route::middleware([IsAdmin::class])->group(function () {
-        Route::controller(EventController::class)->group(function(){
-            Route::post('store', 'store');
-            Route::get('/show/{id}', 'show');
-            Route::patch('/events/{event}', 'updateEventById');
-            Route::delete('/events/{event}', 'deleteEventById');
-        });
-    }); 
-});
-
- */

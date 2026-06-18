@@ -9,6 +9,8 @@ use App\Domain\Event\Repositories\Contracts\EventRepositoryInterface;
 use App\Domain\Event\Repositories\EventRepository;
 use App\Domain\Event_Sections\Repositories\EventSectionsRepository;
 use App\Domain\Event_Sections\Repositories\IEventSectionsRepository;
+use App\Domain\Venue\Repositories\IVenueRepository;
+use App\Domain\Venue\Repositories\VenueRepository;
 use App\Domain\Section\Repositories\ISectionRepository;
 use App\Domain\Section\Repositories\SectionRepository;
 use App\Domain\Seat\Repositories\ISeatRepository;
@@ -43,6 +45,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             IEventSectionsRepository::class,
             EventSectionsRepository::class
+        );
+
+        $this->app->bind(
+            IVenueRepository::class,
+            VenueRepository::class
         );
     }
 
