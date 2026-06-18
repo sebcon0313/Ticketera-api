@@ -12,16 +12,8 @@ class EventSeat extends Model
     protected $fillable = [
         'event_id',
         'seat_id',
-        'price',
         'status',
     ];
-
-    protected function casts(): array
-    {
-        return [
-            'price' => 'decimal:2',
-        ];
-    }
 
     public function event(): BelongsTo
     {

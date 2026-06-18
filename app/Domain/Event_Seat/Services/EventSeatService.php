@@ -27,7 +27,6 @@ class EventSeatService
             return [
                 'event_id' => $event->id,
                 'seat_id' => $seat->id,
-                'price' => 0,
                 'status' => 'disponible',
                 'created_at' => $now,
                 'updated_at' => $now,

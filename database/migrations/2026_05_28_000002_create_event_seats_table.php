@@ -12,7 +12,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('event_id')->constrained('events')->cascadeOnDelete();
             $table->foreignId('seat_id')->constrained('seats')->cascadeOnDelete();
-            $table->decimal('price', 10, 2);
             $table->enum('status', ['disponible', 'reservado', 'vendido'])->default('disponible');
             $table->timestamps();
 
