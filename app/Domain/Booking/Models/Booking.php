@@ -3,6 +3,7 @@
 namespace App\Domain\Booking\Models;
 
 use App\Domain\Event\Models\Event;
+use App\Domain\booking_Seat\Models\BookingSeat;
 use App\Domain\User\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -53,6 +54,16 @@ class Booking extends Model
 
     public function bookingSeats(): HasMany
     {
-        return $this->hasMany('App\\Domain\\booking_Seat\\Models\\BookingSeat');
+        return $this->hasMany(BookingSeat::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany('App\\Domain\\Payments\\Models\\Payment');
+    }
+
+    public function tickets(): HasMany
+    {
+        return $this->hasMany('App\\Domain\\Ticket\\Models\\Ticket');
     }
 }

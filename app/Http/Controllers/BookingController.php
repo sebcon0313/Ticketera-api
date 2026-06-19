@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Domain\Booking\DTOs\BookingPayDTO;
 use App\Domain\Booking\Services\BookingService;
+use App\Http\Requests\Booking\PayBookingRequest;
 use App\Http\Requests\Booking\StoreBookingRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Routing\Controller as BaseController;
 
 class BookingController extends BaseController
 {
@@ -39,6 +41,33 @@ class BookingController extends BaseController
             ], 422);
         } catch (\Throwable $e) {
             Log::error('Booking creation error: ' . $e->getMessage(), [
+                'exception' => $e,
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error',
+                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+            ], 500);
+        }
+    }
+
+    public function pay(PayBookingRequest $request): JsonResponse
+    {
+        try {
+            $result = $this->service->payBooking(
+                BookingPayDTO::fromArray($request->validated())
+            );
+
+            return response()->json($result, $result['success'] ? 200 : 422);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Throwable $e) {
+            Log::error('Booking payment error: ' . $e->getMessage(), [
                 'exception' => $e,
             ]);
 

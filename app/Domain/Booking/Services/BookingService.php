@@ -5,10 +5,14 @@ namespace App\Domain\Booking\Services;
 use App\Domain\Booking\Repositories\BookingRepository;
 use App\Domain\Event_Sections\Models\EventSection;
 use App\Domain\Event_Seat\Repositories\EventSeatRepository;
+use App\Domain\Payments\Repositories\PaymentRepository;
+use App\Domain\Ticket\Repositories\TicketRepository;
 use App\Domain\booking_Seat\Repositories\BookingSeatRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use App\Domain\Booking\DTOs\BookingPayDTO;
+use App\Domain\Booking\Models\Booking;
 
 class BookingService
 {
@@ -16,6 +20,8 @@ class BookingService
         private readonly BookingRepository $bookingRepository,
         private readonly BookingSeatRepository $bookingSeatRepository,
         private readonly EventSeatRepository $eventSeatRepository,
+        private readonly PaymentRepository $paymentRepository,
+        private readonly TicketRepository $ticketRepository,
     ) {}
 
     public function reserveSeats(int $userId, int $eventId, array $seatIds): array
@@ -108,5 +114,147 @@ class BookingService
     private function generateReference(): string
     {
         return 'BK-' . Str::upper(Str::random(33));
+    }
+
+    public function payBooking(BookingPayDTO $dto): array
+    {
+        //$paymentResult = $data['payment_result'] ?? 'exitoso';
+
+        return DB::transaction(function () use ($dto) {
+            $booking = $this->bookingRepository->findByBookingIdForUpdate($dto->bookingId());
+
+            if (! $booking) {
+                throw ValidationException::withMessages([
+                    'booking_id' => ['Booking not found.'],
+                ]);
+            }
+
+            if (in_array($booking->status, [
+                \App\Domain\Booking\Models\Booking::STATUS_PAID,
+                \App\Domain\Booking\Models\Booking::STATUS_CANCELLED,
+                \App\Domain\Booking\Models\Booking::STATUS_EXPIRED,
+                \App\Domain\Booking\Models\Booking::STATUS_PROCESSING_PAYMENT,
+            ], true)) {
+                throw ValidationException::withMessages([
+                    'booking_id' => ['This booking cannot be paid in its current status.'],
+                ]);
+            }
+
+            // validar si es pago en efectivo o con tarjeta
+            if($dto->paymentMethod() === 'tarjeta')
+            {
+
+                // 1. hay que realizar una validacion para los datos de la tarjeta, que esten completos
+                // 2. hay que cambiar el estado del booking a proceso_pago para evitar que se ejecute el proceso de expiracion mientras se procesa el pago
+                
+                // integracion de logica para pasarela de pagos
+                //$result = PayBookingTarget(); // retorna true o false
+                /* if(!$result)
+                {
+                    return $this->payBookingFailed($booking);
+                }
+
+                return $this->payBookingSuccess($booking, $dto); */
+
+            }else
+            {
+                // lógica para pago en efectivo
+                return $this->payBookingSuccess($booking, $dto);
+            }
+        });
+    }
+
+    public function payBookingSuccess(Booking $booking, BookingPayDTO $dto): array
+    {
+        $now = now();
+        $transactionReference = (string) Str::uuid();
+
+        $bookingSeats = $this->bookingSeatRepository->findByBookingIdWithEventSeat($booking->id);
+
+        $payment = $this->paymentRepository->create([
+            'booking_id' => $booking->id,
+            'provider' => $dto->paymentMethod(),
+            'provider_reference' => $transactionReference,
+            'amount' => $booking->total,
+            'status' => 'pagado',
+            'paid_at' => $now,
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
+
+        $this->bookingRepository->markAsPaid($booking, [
+            'payment_method' => $dto->paymentMethod(),
+            'transaction_reference' => $transactionReference,
+            'confirmed_at' => $now,
+        ]);
+
+        $this->bookingSeatRepository->updateStatusByBookingId($booking->id, 'confirmado');
+        $this->eventSeatRepository->updateStatusByIds($bookingSeats->pluck('event_seat_id')->all(), 'vendido');
+
+        $ticketRows = [];
+
+        foreach ($bookingSeats as $bookingSeat) {
+            $ticketRows[] = [
+                'booking_id' => $booking->id,
+                'booking_seat_id' => $bookingSeat->id,
+                'event_id' => $booking->event_id,
+                'user_id' => $booking->user_id,
+                'ticket_type' => $dto->ticketType(),
+                'qr_code' => (string) Str::uuid(),
+                'status' => 'emitido',
+                'issued_at' => $now,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+        }
+
+        $this->ticketRepository->insertMany($ticketRows);
+
+        return [
+            'success' => true,
+            'message' => 'Payment completed successfully.',
+            'booking_id' => $booking->id,
+            'payment_id' => $payment->id,
+            'tickets_count' => count($ticketRows),
+        ];
+    }
+
+    public function payBookingFailed(Booking $booking) : array
+    {
+        $now = now();
+        $transactionReference = (string) Str::uuid();
+
+        $payment = $this->paymentRepository->create([
+            'booking_id' => $booking->id,
+            'provider' => 'Tarjeta',
+            'provider_reference' => $transactionReference,
+            'amount' => $booking->total,
+            'status' => 'fallido',
+            'paid_at' => null,
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
+
+        $bookingSeats = $this->bookingSeatRepository->findByBookingIdWithEventSeat($booking->id);
+        $eventSeatIds = $bookingSeats->pluck('event_seat_id')->all();
+
+        $this->bookingSeatRepository->updateStatusByBookingId($booking->id, 'expirado');
+
+        if (! empty($eventSeatIds)) {
+            $this->eventSeatRepository->updateStatusByIds($eventSeatIds, 'disponible');
+        }
+
+        $this->bookingRepository->markAsCancelled($booking, [
+            'payment_method' => 'Tarjeta',
+            'transaction_reference' => $transactionReference,
+            'cancelled_at' => $now,
+        ]);
+
+        return [
+            'success' => false,
+            'message' => 'Payment failed and seats were released.',
+            'booking_id' => $booking->id,
+            'payment_id' => $payment->id,
+        ];
     }
 }

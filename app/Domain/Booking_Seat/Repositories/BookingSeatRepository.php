@@ -23,6 +23,15 @@ class BookingSeatRepository
             ->get();
     }
 
+    public function findByBookingIdWithEventSeat(int $bookingId): Collection
+    {
+        return BookingSeat::query()
+            ->with(['eventSeat.seat'])
+            ->where('booking_id', $bookingId)
+            ->lockForUpdate()
+            ->get();
+    }
+
     public function updateStatusByBookingId(int $bookingId, string $status): int
     {
         return BookingSeat::query()

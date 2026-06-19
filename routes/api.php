@@ -55,6 +55,7 @@ Route::middleware([IsUserAuth::class])->group(function () {
     });
 
     Route::post('bookings', [BookingController::class, 'store']);
+    Route::post('bookings/pay', [BookingController::class, 'pay']);
 
     /*
     |--------------------------------------------------------------------------

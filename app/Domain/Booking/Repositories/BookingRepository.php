@@ -12,6 +12,41 @@ class BookingRepository
         return Booking::create($data);
     }
 
+    public function findByBookingIdForUpdate(int $bookingId): ?Booking
+    {
+        return Booking::query()
+            ->with(['bookingSeats.eventSeat.seat', 'payments', 'tickets'])
+            ->where('id', $bookingId)
+            ->lockForUpdate()
+            ->first();
+    }
+
+    public function markAsPaid(Booking $booking, array $data): int
+    {
+        return Booking::query()
+            ->where('id', $booking->id)
+            ->update([
+                'payment_method' => $data['payment_method'],
+                'transaction_reference' => $data['transaction_reference'] ?? null,
+                'status' => Booking::STATUS_PAID,
+                'confirmed_at' => $data['confirmed_at'] ?? now(),
+                'updated_at' => now(),
+            ]);
+    }
+
+    public function markAsCancelled(Booking $booking, array $data): int
+    {
+        return Booking::query()
+            ->where('id', $booking->id)
+            ->update([
+                'payment_method' => $data['payment_method'] ?? $booking->payment_method,
+                'transaction_reference' => $data['transaction_reference'] ?? null,
+                'status' => Booking::STATUS_CANCELLED,
+                'cancelled_at' => $data['cancelled_at'] ?? now(),
+                'updated_at' => now(),
+            ]);
+    }
+
     public function findOverdueReservations(): Collection
     {
         return Booking::query()
