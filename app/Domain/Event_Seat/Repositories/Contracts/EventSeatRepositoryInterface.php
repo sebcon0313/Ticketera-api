@@ -13,5 +13,9 @@ interface EventSeatRepositoryInterface
 
     public function findByEventIdWithSeat(int $eventId): Collection;
 
+    public function findAvailableByEventAndSeatIds(int $eventId, array $seatIds): Collection;
+
+    public function updateStatusByIds(array $ids, string $status): int;
+
     public function deleteByEventId(int $eventId): int;
 }

@@ -54,6 +54,8 @@ Route::middleware([IsUserAuth::class])->group(function () {
         Route::get('me', [AuthController::class, 'getUser']);
     });
 
+    Route::post('bookings', [BookingController::class, 'store']);
+
     /*
     |--------------------------------------------------------------------------
     | ADMIN ROUTES

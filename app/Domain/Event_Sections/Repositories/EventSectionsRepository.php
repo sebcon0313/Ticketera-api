@@ -19,4 +19,12 @@ class EventSectionsRepository implements IEventSectionsRepository
 			['price', 'updated_at']
 		);
 	}
+
+	public function findByEventSectionId(int $eventId, int $sectionId): ?EventSection
+	{
+		return EventSection::query()
+			->where('event_id', $eventId)
+			->where('section_id', $sectionId)
+			->first();
+	}
 }

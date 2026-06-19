@@ -82,7 +82,7 @@ class EventService
                     'section' => $firstSeat->section?->name,
                     'seats' => $group->map(function ($eventSeat): array {
                         return [
-                            'id' => $eventSeat->seat->id,
+                            'id' => $eventSeat->id,
                             'row' => $eventSeat->seat->row_label,
                             'number' => $eventSeat->seat->seat_number,
                             'status' => $eventSeat->status,

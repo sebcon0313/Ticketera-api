@@ -37,6 +37,31 @@ class EventSeatRepository implements EventSeatRepositoryInterface
             ->get();
     }
 
+    public function findAvailableByEventAndSeatIds(int $eventId, array $seatIds): Collection
+    {
+        return EventSeat::query()
+            ->with(['seat'])
+            ->where('event_id', $eventId)
+            ->whereIn('id', $seatIds)
+            ->where('status', 'disponible')
+            ->lockForUpdate()
+            ->get();
+    }
+
+    public function updateStatusByIds(array $ids, string $status): int
+    {
+        if (empty($ids)) {
+            return 0;
+        }
+
+        return EventSeat::query()
+            ->whereIn('id', $ids)
+            ->update([
+                'status' => $status,
+                'updated_at' => now(),
+            ]);
+    }
+
     public function deleteByEventId(int $eventId): int
     {
         return EventSeat::query()
