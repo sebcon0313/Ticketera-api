@@ -19,7 +19,7 @@ return new class extends Migration
             $table->decimal('total', 10, 2)->default(0.00);
             $table->string('payment_method', 50)->nullable();
             $table->string('transaction_reference', 255)->nullable();
-            $table->enum('status', ['pendiente', 'reservado', 'confirmado', 'pagado', 'cancelado', 'expirado'])
+            $table->enum('status', ['pendiente', 'reservado', 'proceso_pago', 'confirmado', 'pagado', 'cancelado', 'expirado'])
                 ->default('pendiente');
             $table->dateTime('reserved_until')->nullable();
             $table->dateTime('confirmed_at')->nullable();

@@ -10,6 +10,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Booking extends Model
 {
+    public const STATUS_PENDING = 'pendiente';
+    public const STATUS_RESERVED = 'reservado';
+    public const STATUS_PROCESSING_PAYMENT = 'proceso_pago';
+    public const STATUS_CONFIRMED = 'confirmado';
+    public const STATUS_PAID = 'pagado';
+    public const STATUS_CANCELLED = 'cancelado';
+    public const STATUS_EXPIRED = 'expirado';
+
     protected $fillable = [
         'reference',
         'user_id',
