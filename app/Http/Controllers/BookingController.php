@@ -10,6 +10,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use App\Http\Resources\BookingSummaryResource;
+use App\Domain\Booking\DTOs\BookingSummaryDTO;
 
 class BookingController extends BaseController
 {
@@ -66,6 +68,36 @@ class BookingController extends BaseController
                 'message' => 'Validation error',
                 'errors' => $e->errors(),
             ], 422);
+        } catch (\Throwable $e) {
+            Log::error('Booking payment error: ' . $e->getMessage(), [
+                'exception' => $e,
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error',
+                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+            ], 500);
+        }
+    }
+
+    public function summary(int $bookingId)
+    {
+        try{
+            $dto = $this->service->getBookingSummary(
+                $bookingId,
+                auth()->guard()->id(),
+            );
+
+            return new BookingSummaryResource($dto);
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error',
+                'errors' => $e->errors(),
+            ], 422);
+
         } catch (\Throwable $e) {
             Log::error('Booking payment error: ' . $e->getMessage(), [
                 'exception' => $e,

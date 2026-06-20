@@ -8,6 +8,7 @@ use App\Domain\User\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Domain\Invoice\Models\Invoice;
 
 class Booking extends Model
 {
@@ -65,5 +66,10 @@ class Booking extends Model
     public function tickets(): HasMany
     {
         return $this->hasMany('App\\Domain\\Ticket\\Models\\Ticket');
+    }
+
+    public function invoice()
+    {
+        return $this->hasOne(Invoice::class);
     }
 }

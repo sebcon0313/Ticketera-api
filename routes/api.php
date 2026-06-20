@@ -56,6 +56,7 @@ Route::middleware([IsUserAuth::class])->group(function () {
 
     Route::post('bookings', [BookingController::class, 'store']);
     Route::post('bookings/pay', [BookingController::class, 'pay']);
+    Route::get('bookings/{bookingId}/summary', [BookingController::class, 'summary']);
 
     /*
     |--------------------------------------------------------------------------

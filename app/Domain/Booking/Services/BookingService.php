@@ -14,6 +14,8 @@ use Illuminate\Validation\ValidationException;
 use App\Domain\Booking\DTOs\BookingPayDTO;
 use App\Domain\Booking\Models\Booking;
 use App\Domain\Invoice\Services\InvoiceService;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Domain\Booking\DTOs\BookingSummaryDTO;
 
 class BookingService
 {
@@ -266,8 +268,76 @@ class BookingService
         ];
     }
 
-    public function BookingSummary ()
-    {
-        
+    public function getBookingSummary(int $bookingId, int $userId): BookingSummaryDTO {
+
+        $booking = $this->bookingRepository
+            ->findSummaryByIdAndUser(
+                $bookingId,
+                $userId
+            );
+
+        if (!$booking) {
+            throw new NotFoundHttpException(
+                'Reserva no encontrada'
+            );
+        }
+
+        // Verificar que la reserva tenga estado pagado
+        if ($booking->status !== Booking::STATUS_PAID) {
+            throw ValidationException::withMessages([
+                'booking_id' => ['This booking cannot be paid in its current status.'],
+            ]);
+        }
+
+        $tickets = [];
+
+        foreach ($booking->tickets as $ticket) {
+
+            $seat = $ticket
+                ->bookingSeat
+                ->eventSeat
+                ->seat;
+
+            $tickets[] = [
+                'ticket_id' => $ticket->id,
+                'qr_code' => $ticket->qr_code,
+                'seat' => $seat->row_label . '-' . $seat->seat_number,
+                'section' => $seat->section->name,
+            ];
+        }
+
+        return new BookingSummaryDTO(
+            booking: [
+                'id' => $booking->id,
+                'reference' => $booking->reference,
+                'status' => $booking->status,
+                'total' => $booking->total,
+            ],
+
+            event: [
+                'id' => $booking->event->id,
+                'title' => $booking->event->title,
+                'date' => $booking->event->starts_at,
+            ],
+
+            customer: [
+                'id' => $booking->user->id,
+                'name' => $booking->user->name,
+                'email' => $booking->user->email,
+            ],
+
+            invoice: $booking->invoice
+                ? [
+                    'invoice_number' => $booking->invoice->invoice_number,
+                    'nit' => $booking->invoice->nit,
+                    'subtotal' => $booking->invoice->subtotal,
+                    'tax_amount' => $booking->invoice->tax_amount,
+                    'total' => $booking->invoice->total,
+                    'issued_at' => $booking->invoice->issued_at,
+                ]
+                : null,
+
+            tickets: $tickets
+        );
     }
 }

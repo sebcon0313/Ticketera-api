@@ -66,4 +66,17 @@ class BookingRepository
                 'updated_at' => now(),
             ]);
     }
+
+    public function findSummaryByIdAndUser(int $bookingId, int $userId): ?Booking {
+        return Booking::query()
+            ->with([
+                'user',
+                'event',
+                'invoice',
+                'tickets.bookingSeat.eventSeat.seat.section'
+            ])
+            ->where('id', $bookingId)
+            ->where('user_id', $userId)
+            ->first();
+    }
 }
