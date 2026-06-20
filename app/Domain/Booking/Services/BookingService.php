@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use App\Domain\Booking\DTOs\BookingPayDTO;
 use App\Domain\Booking\Models\Booking;
+use App\Domain\Invoice\Services\InvoiceService;
 
 class BookingService
 {
@@ -22,6 +23,7 @@ class BookingService
         private readonly EventSeatRepository $eventSeatRepository,
         private readonly PaymentRepository $paymentRepository,
         private readonly TicketRepository $ticketRepository,
+        private readonly InvoiceService $invoiceService,
     ) {}
 
     public function reserveSeats(int $userId, int $eventId, array $seatIds): array
@@ -210,6 +212,12 @@ class BookingService
 
         $this->ticketRepository->insertMany($ticketRows);
 
+        // Creacion de Factura si el tipo de ticket es tarjeta o efectivo
+        if($dto->ticketType() === 'tarjeta' || $dto->ticketType() === 'efectivo')
+        {
+            $this->invoiceService->createInvoiceForPayment($booking->id, $payment->id, $dto->nit() ?: 'C/F');
+        }
+
         return [
             'success' => true,
             'message' => 'Payment completed successfully.',
@@ -256,5 +264,10 @@ class BookingService
             'booking_id' => $booking->id,
             'payment_id' => $payment->id,
         ];
+    }
+
+    public function BookingSummary ()
+    {
+        
     }
 }

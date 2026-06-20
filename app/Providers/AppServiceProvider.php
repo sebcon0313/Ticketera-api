@@ -17,6 +17,8 @@ use App\Domain\Seat\Repositories\ISeatRepository;
 use App\Domain\Seat\Repositories\SeatRepository;
 use App\Domain\User\Repositories\Contracts\UserRepositoryInterface;
 use App\Domain\User\Repositories\UserRepository;
+use App\Domain\Invoice\Repositories\InvoiceRepositoryInterface;
+use App\Domain\Invoice\Repositories\InvoiceRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -50,6 +52,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             IVenueRepository::class,
             VenueRepository::class
+        );
+
+        $this->app->bind(
+            InvoiceRepositoryInterface::class,
+            InvoiceRepository::class
         );
     }
 

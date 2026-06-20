@@ -13,6 +13,7 @@ class BookingPayDTO
         private readonly string $yearTarget,
         private readonly string $cvcTarget,
         private readonly string $nameTarget,
+        private readonly string $nit,
     ){}
 
     public static function fromArray(array $data): self
@@ -20,12 +21,13 @@ class BookingPayDTO
         return new self(
             (int) $data['booking_id'],
             $data['ticket_type'] ?? 'tarjeta',
-            $data['payment_method'] ?? 'efectivo',
+            $data['payment_method'] ?? '',
             $data['number_target'] ?? '',
             $data['month_target'] ?? '',
             $data['year_target'] ?? '',
             $data['cvc_target'] ?? '',
-            $data['name_target'] ?? ''
+            $data['name_target'] ?? '',
+            $data['nit'] ?? 'C/F',
         );
     }
 
@@ -67,5 +69,10 @@ class BookingPayDTO
     public function nameTarget(): string
     {
         return $this->nameTarget;
+    }
+
+    public function nit(): string
+    {
+        return $this->nit;
     }
 }

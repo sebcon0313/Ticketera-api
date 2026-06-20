@@ -26,6 +26,7 @@ class PayBookingRequest extends FormRequest
             'year_target' => 'nullable|string|max:100',
             'cvc_target' => 'nullable|string|max:100',
             'name_target' => 'nullable|string|max:100',
+            'nit' => 'nullable|string|max:55',
         ];
     }
 

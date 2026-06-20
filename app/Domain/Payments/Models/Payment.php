@@ -29,4 +29,9 @@ class Payment extends Model
     {
         return $this->belongsTo(Booking::class);
     }
+
+    public function invoices()
+    {
+        return $this->hasMany('App\\Domain\\Invoice\\Models\\Invoice');
+    }
 }
