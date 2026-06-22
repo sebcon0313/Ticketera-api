@@ -7,8 +7,7 @@ use App\Http\Controllers\Api\EventSectionsController;
 use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\Api\SeatController;
 use App\Http\Controllers\Api\VenueController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\TicketController;
+use App\Http\Controllers\Api\TicketController;
 use App\Http\Middleware\IsUserAuth;
 use App\Http\Middleware\IsAdmin;    
 use Illuminate\Support\Facades\Route;
@@ -57,6 +56,8 @@ Route::middleware([IsUserAuth::class])->group(function () {
     Route::post('bookings', [BookingController::class, 'store']);
     Route::post('bookings/pay', [BookingController::class, 'pay']);
     Route::get('bookings/{bookingId}/summary', [BookingController::class, 'summary']);
+
+    Route::post('tickets/update-qr-codes', [TicketController::class, 'updateQrCodes']);
 
     /*
     |--------------------------------------------------------------------------

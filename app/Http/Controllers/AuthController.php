@@ -82,7 +82,8 @@ class AuthController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error during authentication',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                //'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error interno del servidor',
             ], 500);
         }
     }
@@ -109,7 +110,7 @@ class AuthController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error interno del servidor',
             ], 500);
         }
         
@@ -130,7 +131,7 @@ class AuthController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error during logout',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error interno del servidor',
             ], 500);
         }
     }

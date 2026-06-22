@@ -15,11 +15,11 @@ return new class extends Migration
             $table->foreignId('event_id')->constrained('events')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->enum('ticket_type', ['tarjeta', 'cortesia', 'efectivo'])->default('tarjeta');
-            $table->char('qr_code', 36)->unique();
+            $table->string('qr_code', 255)->unique();
             $table->enum('status', ['emitido', 'usado', 'cancelado'])->default('emitido');
             $table->dateTime('issued_at')->nullable(); // Fecha de entrega
             $table->dateTime('used_at')->nullable(); // fecha de ingreso al evento
-            $table->char('pdf_path', 255)->nullable();
+            $table->string('pdf_path', 255)->nullable();
             $table->timestamps();
 
             $table->index('booking_id', 'idx_tickets_booking');
