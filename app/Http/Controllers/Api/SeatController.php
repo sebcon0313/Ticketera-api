@@ -32,7 +32,7 @@ class SeatController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error getting seats',
             ], 500);
         }
     }
@@ -49,7 +49,7 @@ class SeatController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error getting the seats of the section',
             ], 500);
         }
     }
@@ -66,7 +66,7 @@ class SeatController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error getting seat',
             ], 500);
         }
     }
@@ -83,7 +83,7 @@ class SeatController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error creating seat',
             ], 500);
         }
     }
@@ -104,7 +104,7 @@ class SeatController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error creating seats',
             ], 500);
         }
     }
@@ -123,7 +123,7 @@ class SeatController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error updating seat',
             ], 500);
         }
     }
@@ -145,7 +145,7 @@ class SeatController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error deleting seat',
             ], 500);
         }
     }

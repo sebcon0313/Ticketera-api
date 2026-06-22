@@ -49,7 +49,7 @@ class BookingController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error creating booking',
             ], 500);
         }
     }
@@ -76,7 +76,7 @@ class BookingController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error paying for the booking',
             ], 500);
         }
     }
@@ -106,7 +106,7 @@ class BookingController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error getting summary',
             ], 500);
         }
     }

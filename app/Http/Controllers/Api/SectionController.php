@@ -28,7 +28,7 @@ class SectionController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error getting sections',
             ], 500);
         }
     }
@@ -45,7 +45,7 @@ class SectionController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error getting section',
             ], 500);
         }
     }
@@ -62,7 +62,7 @@ class SectionController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error getting sections for the venue',
             ], 500);
         }
     }
@@ -79,7 +79,7 @@ class SectionController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error creating section',
             ], 500);
         }
     }
@@ -98,7 +98,7 @@ class SectionController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error updating section',
             ], 500);
         }
     }
@@ -120,7 +120,7 @@ class SectionController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error deleting section',
             ], 500);
         }
     }

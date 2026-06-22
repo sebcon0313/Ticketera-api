@@ -24,8 +24,7 @@ class TicketController extends BaseController
             ]);
         } catch (\Exception $e) {
             Log::error('QR code update error: ' . $e->getMessage(), [
-                'exception' => $e,
-                'input' => $safeInput ?? []
+                'exception' => $e
             ]);
 
             return response()->json([

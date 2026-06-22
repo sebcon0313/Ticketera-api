@@ -31,7 +31,7 @@ class VenueController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error getting Venues',
             ], 500);
         }
     }
@@ -48,7 +48,7 @@ class VenueController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error getting venue',
             ], 500);
         }
     }
@@ -65,7 +65,7 @@ class VenueController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error creating venue',
             ], 500);
         }
     }
@@ -84,7 +84,7 @@ class VenueController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error updating venue',
             ], 500);
         }
     }
@@ -106,7 +106,7 @@ class VenueController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error Deleting venue',
             ], 500);
         }
     }

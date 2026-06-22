@@ -31,7 +31,7 @@ class EventController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error al obtener los eventos',
             ], 500);
         }
     }
@@ -51,7 +51,7 @@ class EventController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error al obtener el evento',
             ], 500);
         }
     }
@@ -72,7 +72,7 @@ class EventController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error al obtener el mapa de asientos',
             ], 500);
         }
     }
@@ -105,7 +105,7 @@ class EventController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error al obtener las localidades',
             ], 500);
         }
     }
@@ -128,7 +128,7 @@ class EventController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error al crear el evento',
             ], 500);
         }   
     }
@@ -150,7 +150,7 @@ class EventController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error al modificar el evento',
             ], 500);
         }
     }
@@ -175,7 +175,7 @@ class EventController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error al eliminar el evento',
             ], 500);
         }
     }

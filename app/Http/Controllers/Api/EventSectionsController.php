@@ -33,7 +33,7 @@ class EventSectionsController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Server error',
-                'error' => env('APP_DEBUG', false) ? $e->getMessage() : null,
+                'error' => 'Error creating Event Section',
             ], 500);
         }
     }
